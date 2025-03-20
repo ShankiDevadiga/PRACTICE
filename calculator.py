@@ -18,3 +18,8 @@ def division(a, b):
     else:
         return "Cannot divide by zero"
 
+
+import math
+def probability(n, r):
+    return math.comb(n, r)
+
