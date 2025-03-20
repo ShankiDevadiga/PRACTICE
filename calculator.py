@@ -14,3 +14,6 @@ def division(a, b):
     else:
         return "Cannot divide by zero"
 
+def difference(a, b):
+    return a - b
+
