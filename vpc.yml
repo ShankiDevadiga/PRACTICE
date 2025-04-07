@@ -28,9 +28,91 @@ Parameters:
   Default: 10.0.3.0/24
   Description: Creating the cidr for subnet 4
   Type: String
+
+ SSHLocation:
+  AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+  ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  Default: 0.0.0.0/0
+  Description: The IP address range that can be used to access the web server using SSH.
+  MaxLength: '18'
+  MinLength: '9'
+  Type: String
    
 Resources:
-  set of resources
+ VPC:
+  Type: AWS::EC2::VPC
+  Properties:
+   CidrBlock: !Ref VpcCIDR
+   EnableDnsHostnames: true
+   EnableDnsSupport: true
+   InstanceTenancy: default
+   Tags: 
+    - Key: name
+      value: vpc
+
+ IGW:
+  Type: AWS::EC2::InternetGateway
+  Properties:
+  Tags: 
+    - Key: name
+      Value: igw
+
+  IGW-attach:
+   Type: AWS::EC2::VPCGatewayAttachment
+   Properties:
+    InternetGatewayId: !Ref IGW
+    VpcId: !Ref VPC
+
+  SUBNET-PUB-1:
+   Type: AWS::EC2::Subnet
+   Properties:
+    AvailabilityZone: !Select [0, !GetAZs , '' ]
+    CidrBlock: !Ref Subnet1CIDR
+    MapPublicIpOnLaunch: true
+    Tags: 
+    - Key: Name
+      Value: pub-subet1
+    VpcId: !Ref VPC
+    
+  SUBNET-PUB-2:
+   Type: AWS::EC2::Subnet
+   Properties:
+    AvailabilityZone: !Select [1, !GetAZs , '' ]
+    CidrBlock: !Ref Subnet2CIDR
+    MapPublicIpOnLaunch: true
+    Tags: 
+    - Key: Name
+      Value: pub-subet2
+    VpcId: !Ref VPC
+    
+  PUB-RT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+     Tags: 
+      - Key: Name
+        Value: RT
+    VpcId: !Ref VPC
+
+  Rotuting:
+    Type: AWS::EC2::Route
+   Properties:
+  CarrierGatewayId: String
+  CoreNetworkArn: String
+  DestinationCidrBlock: String
+  DestinationIpv6CidrBlock: String
+  DestinationPrefixListId: String
+  EgressOnlyInternetGatewayId: String
+  GatewayId: String
+  InstanceId: String
+  LocalGatewayId: String
+  NatGatewayId: String
+  NetworkInterfaceId: String
+  RouteTableId: String
+  TransitGatewayId: String
+  VpcEndpointId: String
+  VpcPeeringConnectionId: String
+
+
 
 Outputs:
   set of outputs
